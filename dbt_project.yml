@@ -10,5 +10,3 @@ models:
   dbt_databricks_test:
     example:
       +materialized: table
-      +database: main
-      +schema: jpg
