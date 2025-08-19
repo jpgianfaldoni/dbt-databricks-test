@@ -9,4 +9,6 @@ model-paths: ["models"]
 models:
   dbt_databricks_test:
     example:
-      +materialized: view
+      +materialized: table
+      +database: main
+      +schema: jpg
