@@ -1,0 +1,123 @@
+version: 2
+
+models:
+  - name: silver_usage_enriched
+    description: "Enriched billing usage data with workspace context and calculated metrics"
+    columns:
+      - name: account_id
+        description: "Unique identifier for the Databricks account"
+        tests:
+          - not_null
+      - name: workspace_id
+        description: "Unique identifier for the workspace"
+        tests:
+          - not_null
+      - name: workspace_name
+        description: "Human-readable name of the workspace"
+        tests:
+          - not_null
+      - name: usage_date
+        description: "Date of the usage event"
+        tests:
+          - not_null
+      - name: service_category
+        description: "Categorized service type (Jobs Compute, Interactive Compute, etc.)"
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['Jobs Compute', 'Interactive Compute', 'SQL Warehouse', 'Delta Live Tables', 'Serverless', 'Storage', 'Other']
+      - name: compute_type
+        description: "Type of compute (Photon, Standard, Premium)"
+        tests:
+          - accepted_values:
+              values: ['Photon', 'Standard', 'Premium', 'Unknown']
+      - name: usage_quantity
+        description: "Quantity of usage for the billing period"
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              expression: ">= 0"
+      - name: usage_duration_hours
+        description: "Duration of usage in hours for compute services"
+
+  - name: silver_compute_metrics
+    description: "Aggregated hourly compute utilization metrics with performance calculations"
+    columns:
+      - name: account_id
+        description: "Unique identifier for the Databricks account"
+        tests:
+          - not_null
+      - name: workspace_id
+        description: "Unique identifier for the workspace"
+        tests:
+          - not_null
+      - name: cluster_id
+        description: "Unique identifier for the compute cluster"
+        tests:
+          - not_null
+      - name: metric_hour
+        description: "Hour for which metrics are aggregated"
+        tests:
+          - not_null
+      - name: avg_cpu_percent
+        description: "Average CPU utilization percentage for the hour"
+        tests:
+          - dbt_utils.expression_is_true:
+              expression: "between 0 and 100"
+      - name: avg_memory_percent
+        description: "Average memory utilization percentage for the hour"
+        tests:
+          - dbt_utils.expression_is_true:
+              expression: "between 0 and 100"
+      - name: overall_utilization_score
+        description: "Combined CPU and memory utilization score (0-100)"
+        tests:
+          - dbt_utils.expression_is_true:
+              expression: "between 0 and 100"
+      - name: cpu_utilization_category
+        description: "Categorized CPU utilization level"
+        tests:
+          - accepted_values:
+              values: ['Low', 'Medium', 'High']
+
+  - name: silver_workspace_metadata  
+    description: "Enhanced workspace information with resource counts and configuration details"
+    columns:
+      - name: account_id
+        description: "Unique identifier for the Databricks account"
+        tests:
+          - not_null
+      - name: workspace_id
+        description: "Unique identifier for the workspace"
+        tests:
+          - unique
+          - not_null
+      - name: workspace_name
+        description: "Human-readable name of the workspace"
+        tests:
+          - not_null
+      - name: workspace_age_category
+        description: "Age category of the workspace"
+        tests:
+          - accepted_values:
+              values: ['New (< 30 days)', 'Recent (< 6 months)', 'Mature (< 1 year)', 'Established (> 1 year)']
+      - name: network_security_type
+        description: "Network security configuration type"
+        tests:
+          - accepted_values:
+              values: ['Private', 'Public']
+      - name: workspace_activity_status
+        description: "Activity status based on presence of warehouses or jobs"
+        tests:
+          - accepted_values:
+              values: ['Active', 'Inactive']
+      - name: total_warehouses
+        description: "Total number of SQL warehouses in the workspace"
+        tests:
+          - dbt_utils.expression_is_true:
+              expression: ">= 0"
+      - name: total_jobs
+        description: "Total number of jobs in the workspace"
+        tests:
+          - dbt_utils.expression_is_true:
+              expression: ">= 0"

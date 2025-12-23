@@ -1,0 +1,131 @@
+version: 2
+
+models:
+  - name: gold_cost_summary_daily
+    description: "Daily cost breakdowns by workspace and service with trend analysis"
+    columns:
+      - name: account_id
+        description: "Unique identifier for the Databricks account"
+        tests:
+          - not_null
+      - name: workspace_id
+        description: "Unique identifier for the workspace"
+        tests:
+          - not_null
+      - name: usage_date
+        description: "Date of the usage summary"
+        tests:
+          - not_null
+      - name: workspace_name
+        description: "Human-readable name of the workspace"
+        tests:
+          - not_null
+      - name: service_category
+        description: "Categorized service type"
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['Jobs Compute', 'Interactive Compute', 'SQL Warehouse', 'Delta Live Tables', 'Serverless', 'Storage', 'Other']
+      - name: total_usage_quantity
+        description: "Total usage quantity for the day"
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              expression: ">= 0"
+      - name: day_type
+        description: "Classification of weekday vs weekend"
+        tests:
+          - accepted_values:
+              values: ['Weekday', 'Weekend']
+      - name: usage_change_pct
+        description: "Percentage change from previous day"
+
+  - name: gold_compute_efficiency
+    description: "Daily compute efficiency metrics with optimization recommendations"
+    columns:
+      - name: account_id
+        description: "Unique identifier for the Databricks account"
+        tests:
+          - not_null
+      - name: workspace_id
+        description: "Unique identifier for the workspace"
+        tests:
+          - not_null
+      - name: cluster_id
+        description: "Unique identifier for the compute cluster"
+        tests:
+          - not_null
+      - name: efficiency_date
+        description: "Date of the efficiency analysis"
+        tests:
+          - not_null
+      - name: daily_efficiency_score
+        description: "Daily average efficiency score (0-100)"
+        tests:
+          - dbt_utils.expression_is_true:
+              expression: "between 0 and 100"
+      - name: efficiency_category
+        description: "Categorized efficiency level"
+        tests:
+          - accepted_values:
+              values: ['Highly Efficient', 'Moderately Efficient', 'Inefficient', 'Highly Inefficient']
+      - name: waste_score
+        description: "Resource waste score (0-100, higher = more waste)"
+        tests:
+          - dbt_utils.expression_is_true:
+              expression: "between 0 and 100"
+      - name: optimization_recommendation
+        description: "Automated optimization recommendation based on usage patterns"
+        tests:
+          - not_null
+
+  - name: gold_workspace_cost_insights
+    description: "Monthly workspace-level cost analysis with business recommendations"
+    columns:
+      - name: account_id
+        description: "Unique identifier for the Databricks account"
+        tests:
+          - not_null
+      - name: workspace_id
+        description: "Unique identifier for the workspace"
+        tests:
+          - not_null
+      - name: usage_year
+        description: "Year of the cost analysis"
+        tests:
+          - not_null
+      - name: usage_month
+        description: "Month of the cost analysis"
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              expression: "between 1 and 12"
+      - name: workspace_name
+        description: "Human-readable name of the workspace"
+        tests:
+          - not_null
+      - name: total_monthly_usage
+        description: "Total usage quantity for the month"
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              expression: ">= 0"
+      - name: usage_pattern
+        description: "Usage pattern classification"
+        tests:
+          - accepted_values:
+              values: ['24/7 Operations', 'Some Weekend Activity', 'Business Hours Only']
+      - name: usage_stability
+        description: "Usage volatility assessment"
+        tests:
+          - accepted_values:
+              values: ['Highly Variable', 'Moderately Variable', 'Stable']
+      - name: cost_rank_in_account
+        description: "Ranking of workspace by cost within the account"
+        tests:
+          - dbt_utils.expression_is_true:
+              expression: ">= 1"
+      - name: business_recommendation
+        description: "Business-focused recommendation for cost optimization"
+        tests:
+          - not_null

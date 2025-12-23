@@ -5,8 +5,47 @@ config-version: 2
 profile: 'databricks'
 
 model-paths: ["models"]
+analysis-paths: ["analysis"]
+test-paths: ["tests"]
+seed-paths: ["seeds"]
+macro-paths: ["macros"]
+snapshot-paths: ["snapshots"]
+docs-paths: ["docs"]
+
+target-path: "target"
+clean-targets:
+  - "target"
+  - "dbt_packages"
 
 models:
   dbt_databricks_test:
-    example:
+    # Bronze layer - raw data ingestion
+    bronze:
       +materialized: table
+      +tags: ["bronze", "raw_data"]
+      +on_schema_change: "sync_all_columns"
+      
+    # Silver layer - cleaned and enriched data  
+    silver:
+      +materialized: table
+      +tags: ["silver", "cleaned_data"]
+      +on_schema_change: "sync_all_columns"
+      
+    # Gold layer - business analytics
+    gold:
+      +materialized: table
+      +tags: ["gold", "analytics"]
+      +on_schema_change: "fail"
+      
+    # Staging layer - intermediate transformations
+    staging:
+      +materialized: view
+      +tags: ["staging", "intermediate"]
+
+vars:
+  # Date range for incremental models (can be overridden in CLI)
+  start_date: '2024-01-01'
+  
+  # Cost calculation parameters
+  currency: 'USD'
+  cost_center_mapping_enabled: false
