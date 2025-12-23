@@ -19,7 +19,7 @@ select
     usage_unit,
     usage_quantity,
     record_id,
-    ingestion_time,
+    ingestion_date,  -- Corrected from ingestion_time
     usage_metadata,
     -- Add processing timestamp for audit trail
     current_timestamp() as bronze_processed_at

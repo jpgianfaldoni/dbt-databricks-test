@@ -11,19 +11,9 @@ select
     account_id,
     workspace_id,
     workspace_name,
-    deployment_name,
-    workspace_status,
-    creation_time,
-    workspace_type,
-    cloud,
-    region,
-    is_no_public_ip_enabled,
-    storage_configuration,
-    network_id,
-    storage_customer_managed_key_id,
-    managed_services_customer_managed_key_id,
-    pricing_tier,
-    custom_tags,
+    status,      -- Corrected from workspace_status
+    create_time, -- Corrected from creation_time
+    -- Note: Many columns don't exist in actual system table, using available ones
     -- Add processing timestamp for audit trail
     current_timestamp() as bronze_processed_at
 from system.access.workspaces_latest

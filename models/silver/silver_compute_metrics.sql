@@ -22,7 +22,7 @@ hourly_metrics as (
         ct.workspace_id,
         ct.cluster_id,
         ct.node_type,
-        date_trunc('hour', ct.timestamp) as metric_hour,
+        date_trunc('hour', ct.start_time) as metric_hour,
         
         -- CPU utilization metrics
         avg(ct.cpu_percent) as avg_cpu_percent,
@@ -63,7 +63,7 @@ hourly_metrics as (
         ct.workspace_id, 
         ct.cluster_id,
         ct.node_type,
-        date_trunc('hour', ct.timestamp)
+        date_trunc('hour', ct.start_time)
 ),
 
 -- Enrich with workspace context

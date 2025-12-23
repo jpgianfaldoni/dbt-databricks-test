@@ -60,7 +60,7 @@ workspace_enhanced as (
         w.workspace_name,
         w.deployment_name,
         w.workspace_status,
-        w.creation_time as workspace_creation_time,
+        w.create_time as workspace_creation_time,
         w.workspace_type,
         w.cloud,
         w.region,
@@ -68,11 +68,11 @@ workspace_enhanced as (
         w.is_no_public_ip_enabled,
         
         -- Workspace age calculations
-        current_date() - date(w.creation_time) as workspace_age_days,
+        current_date() - date(w.create_time) as workspace_age_days,
         case 
-            when current_date() - date(w.creation_time) < 30 then 'New (< 30 days)'
-            when current_date() - date(w.creation_time) < 180 then 'Recent (< 6 months)'
-            when current_date() - date(w.creation_time) < 365 then 'Mature (< 1 year)'
+            when current_date() - date(w.create_time) < 30 then 'New (< 30 days)'
+            when current_date() - date(w.create_time) < 180 then 'Recent (< 6 months)'
+            when current_date() - date(w.create_time) < 365 then 'Mature (< 1 year)'
             else 'Established (> 1 year)'
         end as workspace_age_category,
         

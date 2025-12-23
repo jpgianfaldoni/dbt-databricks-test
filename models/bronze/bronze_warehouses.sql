@@ -9,26 +9,12 @@
 
 select 
     account_id,
-    workspace_id,
     warehouse_id,
-    name as warehouse_name,
-    size,
-    cluster_size,
-    min_num_clusters,
-    max_num_clusters,
-    auto_stop_mins,
-    auto_resume,
-    warehouse_type,
-    state,
-    creator_id,
-    creator_name,
-    creation_time,
-    deleted_time,
-    updated_time,
-    enable_photon,
-    enable_serverless_compute,
-    spot_instance_policy,
-    channel,
+    created_by,   -- Available column
+    change_time,  -- Available column
+    delete_time,  -- Available column
+    tags,         -- Available column
+    -- Note: Using available columns from actual system table
     -- Add processing timestamp for audit trail
     current_timestamp() as bronze_processed_at
 from system.compute.warehouses
