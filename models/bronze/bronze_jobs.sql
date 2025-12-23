@@ -26,4 +26,4 @@ select
     tags as job_tags,
     -- Add processing timestamp for audit trail
     current_timestamp() as bronze_processed_at
-from {{ source('system', 'lakeflow_jobs') }}
+from system.lakeflow.jobs

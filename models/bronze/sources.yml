@@ -4,7 +4,7 @@ sources:
   - name: system
     description: "Databricks system tables containing operational data"
     # Override catalog/schema to prevent job config interference
-    database: "{{ 'system' }}"
+    database: "{{ '' }}"
     schema: "{{ '' }}"
     tables:
       - name: billing_usage

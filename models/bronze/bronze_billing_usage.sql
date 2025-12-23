@@ -23,7 +23,7 @@ select
     usage_metadata,
     -- Add processing timestamp for audit trail
     current_timestamp() as bronze_processed_at
-from {{ source('system', 'billing_usage') }}
+from system.billing.usage
 
 -- For incremental processing in production
 {% if is_incremental() %}

@@ -21,7 +21,7 @@ select
     ingestion_time,
     -- Add processing timestamp for audit trail
     current_timestamp() as bronze_processed_at
-from {{ source('system', 'compute_node_timeline') }}
+from system.compute.node_timeline
 
 -- For incremental processing in production
 {% if is_incremental() %}

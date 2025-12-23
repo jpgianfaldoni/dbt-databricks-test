@@ -31,4 +31,4 @@ select
     channel,
     -- Add processing timestamp for audit trail
     current_timestamp() as bronze_processed_at
-from {{ source('system', 'compute_warehouses') }}
+from system.compute.warehouses
