@@ -3,10 +3,13 @@ version: 2
 sources:
   - name: system
     description: "Databricks system tables containing operational data"
+    # Override catalog/schema to prevent job config interference
+    database: "{{ 'system' }}"
+    schema: "{{ '' }}"
     tables:
       - name: billing_usage
         description: "Billable usage across the account"
-        identifier: "`system`.`billing`.`usage`"
+        identifier: "billing.usage"
         columns:
           - name: account_id
             description: "Account identifier"
@@ -21,7 +24,7 @@ sources:
             
       - name: compute_node_timeline
         description: "Node utilization metrics for compute resources"
-        identifier: "`system`.`compute`.`node_timeline`"
+        identifier: "compute.node_timeline"
         columns:
           - name: account_id
             description: "Account identifier"
@@ -34,7 +37,7 @@ sources:
             
       - name: access_workspaces_latest
         description: "Latest workspace metadata and configuration"
-        identifier: "`system`.`access`.`workspaces_latest`"
+        identifier: "access.workspaces_latest"
         columns:
           - name: account_id
             description: "Account identifier"
@@ -45,7 +48,7 @@ sources:
             
       - name: compute_warehouses
         description: "SQL warehouse configurations and metadata"
-        identifier: "`system`.`compute`.`warehouses`"
+        identifier: "compute.warehouses"
         columns:
           - name: account_id
             description: "Account identifier"
@@ -56,7 +59,7 @@ sources:
             
       - name: lakeflow_jobs
         description: "Job configurations and metadata"
-        identifier: "`system`.`lakeflow`.`jobs`"
+        identifier: "lakeflow.jobs"
         columns:
           - name: account_id
             description: "Account identifier"
