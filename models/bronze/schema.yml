@@ -27,85 +27,15 @@ models:
           - not_null
           - dbt_utils.expression_is_true:
               expression: ">= 0"
+      - name: sku_name
+        description: "SKU name for the billable service"
+        tests:
+          - not_null
+      - name: usage_unit
+        description: "Unit of measurement for usage (e.g., DBU, GB)"
+        tests:
+          - not_null
+      - name: cloud
+        description: "Cloud provider (AWS, Azure, GCP)"
       - name: bronze_processed_at
         description: "Timestamp when the record was processed in the bronze layer"
-
-  - name: bronze_compute_timeline
-    description: "Raw compute node utilization metrics from system tables"
-    columns:
-      - name: account_id
-        description: "Unique identifier for the Databricks account"
-        tests:
-          - not_null
-      - name: workspace_id
-        description: "Unique identifier for the workspace"
-        tests:
-          - not_null
-      - name: cluster_id
-        description: "Unique identifier for the compute cluster"
-        tests:
-          - not_null
-      - name: timestamp
-        description: "Timestamp of the metric collection"
-        tests:
-          - not_null
-      - name: cpu_percent
-        description: "CPU utilization percentage (0-100)"
-        tests:
-          - dbt_utils.expression_is_true:
-              expression: "between 0 and 100"
-
-  - name: bronze_workspaces
-    description: "Raw workspace metadata and configuration from system tables"
-    columns:
-      - name: account_id
-        description: "Unique identifier for the Databricks account"
-        tests:
-          - not_null
-      - name: workspace_id
-        description: "Unique identifier for the workspace"
-        tests:
-          - unique
-          - not_null
-      - name: workspace_name
-        description: "Human-readable name of the workspace"
-        tests:
-          - not_null
-      - name: workspace_status
-        description: "Current status of the workspace"
-
-  - name: bronze_warehouses
-    description: "Raw SQL warehouse configuration data from system tables"
-    columns:
-      - name: account_id
-        description: "Unique identifier for the Databricks account"
-        tests:
-          - not_null
-      - name: workspace_id
-        description: "Unique identifier for the workspace"
-        tests:
-          - not_null
-      - name: warehouse_id
-        description: "Unique identifier for the SQL warehouse"
-        tests:
-          - not_null
-      - name: warehouse_name
-        description: "Human-readable name of the warehouse"
-
-  - name: bronze_jobs
-    description: "Raw job configuration data from system tables"
-    columns:
-      - name: account_id
-        description: "Unique identifier for the Databricks account"
-        tests:
-          - not_null
-      - name: workspace_id
-        description: "Unique identifier for the workspace"  
-        tests:
-          - not_null
-      - name: job_id
-        description: "Unique identifier for the job"
-        tests:
-          - not_null
-      - name: job_name
-        description: "Human-readable name of the job"

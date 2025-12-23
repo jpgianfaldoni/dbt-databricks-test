@@ -1,15 +1,16 @@
 version: 2
 
+# NOTE: Sources are not used in the simplified version
+# We reference system tables directly to avoid catalog/schema conflicts
+# This file is kept for documentation purposes only
+
 sources:
   - name: system
     description: "Databricks system tables containing operational data"
-    # Override catalog/schema to prevent job config interference
-    database: "{{ '' }}"
-    schema: "{{ '' }}"
     tables:
       - name: billing_usage
-        description: "Billable usage across the account"
-        identifier: "billing.usage"
+        description: "Billable usage across the account - Free to use with 365 days retention"
+        identifier: "system.billing.usage"
         columns:
           - name: account_id
             description: "Account identifier"
@@ -21,49 +22,11 @@ sources:
             description: "Quantity of usage for the billing period"
           - name: usage_date
             description: "Date of usage"
-            
-      - name: compute_node_timeline
-        description: "Node utilization metrics for compute resources"
-        identifier: "compute.node_timeline"
-        columns:
-          - name: account_id
-            description: "Account identifier"
-          - name: workspace_id
-            description: "Workspace identifier"
-          - name: cluster_id
-            description: "Cluster identifier"
-          - name: timestamp
-            description: "Timestamp of the metric collection"
-            
-      - name: access_workspaces_latest
-        description: "Latest workspace metadata and configuration"
-        identifier: "access.workspaces_latest"
-        columns:
-          - name: account_id
-            description: "Account identifier"
-          - name: workspace_id
-            description: "Workspace identifier"
-          - name: workspace_name
-            description: "Name of the workspace"
-            
-      - name: compute_warehouses
-        description: "SQL warehouse configurations and metadata"
-        identifier: "compute.warehouses"
-        columns:
-          - name: account_id
-            description: "Account identifier"
-          - name: workspace_id
-            description: "Workspace identifier"
-          - name: warehouse_id
-            description: "SQL warehouse identifier"
-            
-      - name: lakeflow_jobs
-        description: "Job configurations and metadata"
-        identifier: "lakeflow.jobs"
-        columns:
-          - name: account_id
-            description: "Account identifier"
-          - name: workspace_id
-            description: "Workspace identifier"
-          - name: job_id
-            description: "Job identifier"
+          - name: usage_unit
+            description: "Unit of measurement (e.g., DBU, GB)"
+          - name: cloud
+            description: "Cloud provider (AWS, Azure, GCP)"
+          - name: record_id
+            description: "Unique identifier for each billing record"
+          - name: ingestion_date
+            description: "Date when the record was ingested"
